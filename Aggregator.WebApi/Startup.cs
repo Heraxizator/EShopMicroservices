@@ -31,11 +31,11 @@ namespace Order.Microservice
             #region Swagger
             services.AddSwaggerGen(c =>
             {
-                c.IncludeXmlComments(string.Format(@"{0}\Customer.Microservice.xml", System.AppDomain.CurrentDomain.BaseDirectory));
+                c.IncludeXmlComments(string.Format(@"{0}\Aggregator.WebApi.xml", System.AppDomain.CurrentDomain.BaseDirectory));
                 c.SwaggerDoc("v1", new OpenApiInfo
                 {
                     Version = "v1",
-                    Title = "Customer Microservice API",
+                    Title = "Aggregator WebApi",
                 });
             });
             #endregion
@@ -60,7 +60,7 @@ namespace Order.Microservice
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Customer.Microservice");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Aggregator.WebApi");
             });
             app.UseEndpoints(endpoints =>
             {

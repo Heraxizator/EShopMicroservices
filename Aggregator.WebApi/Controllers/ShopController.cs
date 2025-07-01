@@ -1,12 +1,15 @@
-﻿using System;
+﻿using Aggregator.WebApi.Models;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using Product.Microservice.DTOs;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Product.Microservice.DTOs;
+using System.Xml.Linq;
 
 namespace Customer.Microservice.Controllers;
 
@@ -24,7 +27,14 @@ public class ShopController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] ProductDTO productDTO)
     {
-        var response = await _httpClient.GetAsync($"/api/v1/Basket/{productDTO.Name}");
+        var response = await _httpClient.GetAsync($"https://localhost:5001/api/v1/Customer/nickname/{productDTO.Name}");
+
+        ConsumerModel rootobject = JsonConvert.DeserializeObject<ConsumerModel>(await response.Content.ReadAsStringAsync());
+
+        if (rootobject is null)
+        {
+            return NoContent();
+        }
 
         return Ok();
     }
