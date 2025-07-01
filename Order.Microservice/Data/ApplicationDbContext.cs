@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Customer.Microservice.Data
+namespace Order.Microservice.Data
 {
     public class ApplicationDbContext : DbContext, IApplicationDbContext
     {
@@ -16,7 +16,7 @@ namespace Customer.Microservice.Data
             Database.EnsureCreated();
         }
 
-        public DbSet<Entities.Customer> Customers{ get; set; }
+        public DbSet<Entities.Order> Orders { get; set; }
 
         public Task<int> SaveChangesAsync()
         {

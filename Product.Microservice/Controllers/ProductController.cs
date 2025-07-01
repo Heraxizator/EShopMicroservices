@@ -9,7 +9,7 @@ using Product.Microservice.Data;
 
 namespace Product.Microservice.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/[controller]")]
     [ApiController]
     public class ProductController : ControllerBase
     {
