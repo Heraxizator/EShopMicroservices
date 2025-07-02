@@ -44,7 +44,7 @@ public class CustomerController : ControllerBase
         return Ok(customer);
     }
 
-    [HttpGet("nickname/{name}")]
+    [HttpGet("Nickname/{name}")]
     public async Task<IActionResult> GetByName(string name)
     {
         var customer = await _context.Customers.Where(a => a.Name == name).FirstOrDefaultAsync();

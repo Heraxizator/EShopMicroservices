@@ -14,11 +14,37 @@ namespace Product.Microservice.Data
         {
             Database.OpenConnection();
             Database.EnsureCreated();
+
+            if (Products.Any() is false)
+            {
+                Products.Add(new Entities.Product
+                {
+                    Id = 1,
+                    Name = "Computer 1",
+                    Rate = 1000
+                });
+
+                Products.Add(new Entities.Product
+                {
+                    Id = 2,
+                    Name = "Computer 2",
+                    Rate = 1500
+                });
+
+                Products.Add(new Entities.Product
+                {
+                    Id = 3,
+                    Name = "Computer 3",
+                    Rate = 500
+                });
+
+                SaveChanges();
+            }
         }
 
         public DbSet<Entities.Product> Products { get; set; }
 
-        public async Task<int> SaveChanges()
+        public async Task<int> SaveChangesAsync()
         {
             return await base.SaveChangesAsync();
         }

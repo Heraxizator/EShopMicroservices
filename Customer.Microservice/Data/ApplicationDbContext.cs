@@ -14,6 +14,18 @@ namespace Customer.Microservice.Data
         {
             Database.OpenConnection();
             Database.EnsureCreated();
+
+            if (Customers.Any() is false)
+            {
+                Customers.Add(new Entities.Customer
+                {
+                    Id = 1,
+                    City = "Moscow",
+                    Name = "Guest"
+                });
+
+                SaveChanges();
+            }
         }
 
         public DbSet<Entities.Customer> Customers{ get; set; }

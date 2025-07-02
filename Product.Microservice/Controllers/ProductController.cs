@@ -14,17 +14,20 @@ namespace Product.Microservice.Controllers
     public class ProductController : ControllerBase
     {
         private IApplicationDbContext _context;
+
         public ProductController(IApplicationDbContext context)
         {
             _context = context;
         }
+
         [HttpPost]
         public async Task<IActionResult> Create(Entities.Product product)
         {
             _context.Products.Add(product);
-            await _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return Ok(product.Id);
         }
+
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
@@ -32,6 +35,7 @@ namespace Product.Microservice.Controllers
             if (customers == null) return NotFound();
             return Ok(customers);
         }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
@@ -39,15 +43,17 @@ namespace Product.Microservice.Controllers
             if (product == null) return NotFound();
             return Ok(product);
         }
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             var product = await _context.Products.Where(a => a.Id == id).FirstOrDefaultAsync();
             if (product == null) return NotFound();
             _context.Products.Remove(product);
-            await _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return Ok(product.Id);
         }
+
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, Entities.Product productData)
         {
@@ -57,7 +63,7 @@ namespace Product.Microservice.Controllers
             {
                 product.Name = productData.Name;
                 product.Rate = productData.Rate;
-                await _context.SaveChanges();
+                await _context.SaveChangesAsync();
                 return Ok(product.Id);
             }
         }

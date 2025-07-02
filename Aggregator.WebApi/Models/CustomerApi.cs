@@ -2,12 +2,7 @@
 
 namespace Aggregator.WebApi.Models;
 
-public class Rootobject
-{
-    public ConsumerModel[] Source { get; set; }
-}
-
-public class ConsumerModel
+public class CustomerApi
 {
     [JsonPropertyName("name")]
     public string Name { get; set; }

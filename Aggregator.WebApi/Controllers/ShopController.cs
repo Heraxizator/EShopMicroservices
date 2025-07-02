@@ -24,54 +24,35 @@ public class ShopController : ControllerBase
         _httpClient = new();
     }
 
-    [HttpPost]
-    public async Task<IActionResult> Create([FromBody] ProductDTO productDTO)
+    [HttpGet("customers/{customerName}")]
+    public async Task<IActionResult> GetAllByCustomerId(string customerName)
     {
-        var response = await _httpClient.GetAsync($"https://localhost:5001/api/v1/Customer/nickname/{productDTO.Name}");
+        List<ProductApi> productApis = [];
 
-        ConsumerModel rootobject = JsonConvert.DeserializeObject<ConsumerModel>(await response.Content.ReadAsStringAsync());
+        var response = await _httpClient.GetAsync($"https://localhost:5001/api/v1/Customer/Nickname/{customerName}");
 
-        if (rootobject is null)
+        CustomerApi customerApi = JsonConvert.DeserializeObject<CustomerApi>(await response.Content.ReadAsStringAsync());
+
+        if (customerApi is null)
         {
             return NoContent();
         }
 
-        return Ok();
-    }
+        response = await _httpClient.GetAsync($"https://localhost:44373/api/v1/Order/customers/{customerApi.Id}");
 
-    [HttpGet]
-    public async Task<IActionResult> GetAll()
-    {
-        return Ok();
-    }
+        List<OrderApi> orderApis = JsonConvert.DeserializeObject<List<OrderApi>>(await response.Content.ReadAsStringAsync());
 
-    [HttpGet("products/{productId}")]
-    public async Task<IActionResult> GetAllByProductId(long productId)
-    {
-        return Ok();
-    }
+        foreach (OrderApi orderApi in orderApis)
+        {
+            response = await _httpClient.GetAsync($"https://localhost:44337/api/v1/Product/{orderApi.productId}");
 
-    [HttpGet("customers/{customerId}")]
-    public async Task<IActionResult> GetAllByCustomerId(long customerId)
-    {
-        return Ok();
-    }
+            string jsonResponse = await response.Content.ReadAsStringAsync();
 
-    [HttpGet("{id}")]
-    public async Task<IActionResult> GetById(int id)
-    {
-        return Ok();
-    }
+            ProductApi productApi = JsonConvert.DeserializeObject<ProductApi>(jsonResponse);
 
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> Delete(int id)
-    {
-        return Ok();
-    }
+            productApis.Add(productApi);
+        }
 
-    [HttpPut("{id}")]
-    public async Task<IActionResult> Update(int id, ProductDTO productDTO)
-    {
-        return Ok();
+        return Ok(productApis);
     }
 }
