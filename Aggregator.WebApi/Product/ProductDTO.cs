@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Product.Microservice.DTOs;
+namespace Aggregator.WebApi.Product;
 
 public record struct ProductDTO
 (

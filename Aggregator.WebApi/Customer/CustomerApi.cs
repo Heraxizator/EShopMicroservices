@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Aggregator.WebApi.Models;
+namespace Aggregator.WebApi.Customer;
 
 public class CustomerApi
 {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Aggregator.WebApi.DTOs;
+namespace Aggregator.WebApi.Customer;
 
 public record struct CustomerDTO
 (

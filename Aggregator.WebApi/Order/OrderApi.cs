@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Aggregator.WebApi.Models;
+namespace Aggregator.WebApi.Order;
 
 
 public class OrderApiList

@@ -1,9 +1,7 @@
-﻿using Aggregator.WebApi.Models;
-using Microsoft.AspNetCore.Http;
+﻿using Aggregator.WebApi.Customer;
+using Aggregator.WebApi.Order;
+using Aggregator.WebApi.Product;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
-using Product.Microservice.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,40 +15,27 @@ namespace Customer.Microservice.Controllers;
 [ApiController]
 public class ShopController : ControllerBase
 {
-    private readonly HttpClient _httpClient;
-
-    public ShopController()
-    {
-        _httpClient = new();
-    }
+    private readonly CustomerService _customerService = new();
+    private readonly OrderService _orderService = new();
+    private readonly ProductService _productService = new();
 
     [HttpGet("customers/{customerName}")]
     public async Task<IActionResult> GetAllByCustomerId(string customerName)
     {
-        List<ProductApi> productApis = [];
+        List<ProductApi> productApis = new();
 
-        var response = await _httpClient.GetAsync($"https://localhost:5001/api/v1/Customer/Nickname/{customerName}");
-
-        CustomerApi customerApi = JsonConvert.DeserializeObject<CustomerApi>(await response.Content.ReadAsStringAsync());
+        CustomerApi customerApi = await _customerService.GetCustomerByNameAsync(customerName, 5000);
 
         if (customerApi is null)
         {
             return NoContent();
         }
 
-        response = await _httpClient.GetAsync($"https://localhost:44373/api/v1/Order/customers/{customerApi.Id}");
-
-        List<OrderApi> orderApis = JsonConvert.DeserializeObject<List<OrderApi>>(await response.Content.ReadAsStringAsync());
+        List<OrderApi> orderApis = await _orderService.GetOrdersByCustomerIdAsync(customerApi.Id, 5000);
 
         foreach (OrderApi orderApi in orderApis)
         {
-            response = await _httpClient.GetAsync($"https://localhost:44337/api/v1/Product/{orderApi.productId}");
-
-            string jsonResponse = await response.Content.ReadAsStringAsync();
-
-            ProductApi productApi = JsonConvert.DeserializeObject<ProductApi>(jsonResponse);
-
-            productApis.Add(productApi);
+            productApis.Add(await _productService.GetProductByIdAsync(orderApi.productId, 5000));
         }
 
         return Ok(productApis);

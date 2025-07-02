@@ -1,4 +1,4 @@
-﻿namespace Aggregator.WebApi.Models;
+﻿namespace Aggregator.WebApi.Product;
 
 public class ProductApi
 {

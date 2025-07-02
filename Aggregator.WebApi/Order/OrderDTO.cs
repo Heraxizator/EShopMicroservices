@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Aggregator.WebApi.DTOs;
+namespace Aggregator.WebApi.Order;
 
 public record struct OrderDTO
 (

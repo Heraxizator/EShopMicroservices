@@ -37,7 +37,7 @@ public class OrderController : ControllerBase
         return Ok(orders);
     }
 
-    [HttpGet("products/{productId}")]
+    [HttpGet("Products/{productId}")]
     public async Task<IActionResult> GetAllByProductId(long productId)
     {
         var orders = await _context.Orders.Where(x => x.ProductId == productId).ToListAsync();
@@ -45,7 +45,7 @@ public class OrderController : ControllerBase
         return Ok(orders);
     }
 
-    [HttpGet("customers/{customerId}")]
+    [HttpGet("Customers/{customerId}")]
     public async Task<IActionResult> GetAllByCustomerId(long customerId)
     {
         var orders = await _context.Orders.Where(x => x.CustomerId == customerId).ToListAsync();
