@@ -1,9 +1,16 @@
-﻿namespace Aggregator.WebApi.Product;
+﻿using System.Text.Json.Serialization;
+
+namespace Aggregator.WebApi.Product;
 
 public class ProductApi
 {
-    public string name { get; set; }
-    public int rate { get; set; }
-    public int id { get; set; }
+    [JsonPropertyName("name")]
+    public string Name { get; set; }
+
+    [JsonPropertyName("rate")]
+    public int Rate { get; set; }
+
+    [JsonPropertyName("id")]
+    public int Id { get; set; }
 }
 

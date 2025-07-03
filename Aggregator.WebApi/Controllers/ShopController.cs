@@ -19,7 +19,7 @@ public class ShopController : ControllerBase
     private readonly OrderService _orderService = new();
     private readonly ProductService _productService = new();
 
-    [HttpGet("customers/{customerName}")]
+    [HttpGet("Customers/{customerName}")]
     public async Task<IActionResult> GetAllByCustomerId(string customerName)
     {
         List<ProductApi> productApis = new();
@@ -28,14 +28,14 @@ public class ShopController : ControllerBase
 
         if (customerApi is null)
         {
-            return NoContent();
+            return NotFound();
         }
 
         List<OrderApi> orderApis = await _orderService.GetOrdersByCustomerIdAsync(customerApi.Id, 5000);
 
         foreach (OrderApi orderApi in orderApis)
         {
-            productApis.Add(await _productService.GetProductByIdAsync(orderApi.productId, 5000));
+            productApis.Add(await _productService.GetProductByIdAsync(orderApi.ProductId, 5000));
         }
 
         return Ok(productApis);

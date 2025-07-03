@@ -1,19 +1,23 @@
 ﻿using System;
+using System.Text.Json.Serialization;
 
 namespace Aggregator.WebApi.Order;
 
-
-public class OrderApiList
-{
-    public OrderApi[] Source { get; set; }
-}
-
 public class OrderApi
 {
-    public int productId { get; set; }
-    public int customerId { get; set; }
-    public DateTime date { get; set; }
-    public int orderStatus { get; set; }
-    public int id { get; set; }
+    [JsonPropertyName("productId")]
+    public int ProductId { get; set; }
+
+    [JsonPropertyName("customerId")]
+    public int CustomerId { get; set; }
+
+    [JsonPropertyName("date")]
+    public DateTime Date { get; set; }
+
+    [JsonPropertyName("orderStatus")]
+    public int OrderStatus { get; set; }
+
+    [JsonPropertyName("id")]
+    public int Id { get; set; }
 }
 
