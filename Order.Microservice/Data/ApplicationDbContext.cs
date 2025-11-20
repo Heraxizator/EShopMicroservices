@@ -20,7 +20,6 @@ namespace Order.Microservice.Data
             {
                 Orders.Add(new Entities.Order
                 {
-                    Id = 1,
                     CustomerId = 1,
                     ProductId = 1,
                     Date = DateTime.Now,
@@ -29,7 +28,6 @@ namespace Order.Microservice.Data
 
                 Orders.Add(new Entities.Order
                 {
-                    Id = 2,
                     CustomerId = 1,
                     ProductId = 2,
                     Date = DateTime.Now,
@@ -38,7 +36,6 @@ namespace Order.Microservice.Data
 
                 Orders.Add(new Entities.Order
                 {
-                    Id = 3,
                     CustomerId = 1,
                     ProductId = 3,
                     Date = DateTime.Now,

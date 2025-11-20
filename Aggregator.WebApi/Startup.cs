@@ -2,6 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Aggregator.WebApi.Customer;
+using Aggregator.WebApi.Order;
+using Aggregator.WebApi.Product;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -14,7 +17,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Ocelot.Middleware;
 
-namespace Order.Microservice
+namespace Aggregator.WebApi
 {
     public class Startup
     {
@@ -28,10 +31,23 @@ namespace Order.Microservice
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // Register HttpClient
+            services.AddHttpClient();
+            
+            // Register microservice clients
+            services.AddScoped<ICustomerService, CustomerService>();
+            services.AddScoped<IOrderService, OrderService>();
+            services.AddScoped<IProductService, ProductService>();
+            
             #region Swagger
             services.AddSwaggerGen(c =>
             {
-                c.IncludeXmlComments(string.Format(@"{0}\Aggregator.WebApi.xml", System.AppDomain.CurrentDomain.BaseDirectory));
+                var xmlFile = "Aggregator.WebApi.xml";
+                var xmlPath = System.IO.Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, xmlFile);
+                if (System.IO.File.Exists(xmlPath))
+                {
+                    c.IncludeXmlComments(xmlPath);
+                }
                 c.SwaggerDoc("v1", new OpenApiInfo
                 {
                     Version = "v1",
@@ -45,6 +61,9 @@ namespace Order.Microservice
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            // Global exception handler
+            app.UseMiddleware<Middleware.GlobalExceptionHandler>();
+            
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

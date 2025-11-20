@@ -9,15 +9,25 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
-namespace Customer.Microservice.Controllers;
+namespace Aggregator.WebApi.Controllers;
 
 [Route("api/v1/[controller]")]
 [ApiController]
 public class ShopController : ControllerBase
 {
-    private readonly CustomerService _customerService = new();
-    private readonly OrderService _orderService = new();
-    private readonly ProductService _productService = new();
+    private readonly ICustomerService _customerService;
+    private readonly IOrderService _orderService;
+    private readonly IProductService _productService;
+
+    public ShopController(
+        ICustomerService customerService,
+        IOrderService orderService,
+        IProductService productService)
+    {
+        _customerService = customerService;
+        _orderService = orderService;
+        _productService = productService;
+    }
 
     [HttpGet("Customers/{customerName}")]
     public async Task<IActionResult> GetAllByCustomerId(string customerName)

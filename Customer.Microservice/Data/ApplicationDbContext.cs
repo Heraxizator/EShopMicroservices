@@ -19,7 +19,6 @@ namespace Customer.Microservice.Data
             {
                 Customers.Add(new Entities.Customer
                 {
-                    Id = 1,
                     City = "Moscow",
                     Name = "Guest"
                 });

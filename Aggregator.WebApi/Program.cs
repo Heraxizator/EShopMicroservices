@@ -7,7 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace Order.Microservice;
+namespace Aggregator.WebApi;
 
 public class Program
 {

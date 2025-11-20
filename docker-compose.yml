@@ -1,0 +1,131 @@
+services:
+  # SQL Server для Customer
+  customer-db:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    container_name: customer-sqlserver
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=YourStrong@Passw0rd
+      - MSSQL_PID=Developer
+    ports:
+      - "1433:1433"
+    volumes:
+      - customer-db-data:/var/opt/mssql
+    networks:
+      - eshop-network
+
+  # SQL Server для Order
+  order-db:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    container_name: order-sqlserver
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=YourStrong@Passw0rd
+      - MSSQL_PID=Developer
+    ports:
+      - "1434:1433"
+    volumes:
+      - order-db-data:/var/opt/mssql
+    networks:
+      - eshop-network
+
+  # SQL Server для Product
+  product-db:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    container_name: product-sqlserver
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=YourStrong@Passw0rd
+      - MSSQL_PID=Developer
+    ports:
+      - "1435:1433"
+    volumes:
+      - product-db-data:/var/opt/mssql
+    networks:
+      - eshop-network
+
+  # Customer Microservice
+  customer-service:
+    build:
+      context: .
+      dockerfile: Customer.Microservice/Dockerfile
+    container_name: customer-service
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - ConnectionStrings__DefaultConnection=Server=customer-db;Database=CustomerDB;User Id=sa;Password=YourStrong@Passw0rd;TrustServerCertificate=True;
+    ports:
+      - "5001:80"
+    depends_on:
+      - customer-db
+    networks:
+      - eshop-network
+    restart: on-failure
+
+  # Order Microservice
+  order-service:
+    build:
+      context: .
+      dockerfile: Order.Microservice/Dockerfile
+    container_name: order-service
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - ConnectionStrings__DefaultConnection=Server=order-db;Database=OrderDB;User Id=sa;Password=YourStrong@Passw0rd;TrustServerCertificate=True;
+    ports:
+      - "5002:80"
+    depends_on:
+      - order-db
+    networks:
+      - eshop-network
+    restart: on-failure
+
+  # Product Microservice
+  product-service:
+    build:
+      context: .
+      dockerfile: Product.Microservice/Dockerfile
+    container_name: product-service
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - ConnectionStrings__DefaultConnection=Server=product-db;Database=ProductDB;User Id=sa;Password=YourStrong@Passw0rd;TrustServerCertificate=True;
+    ports:
+      - "5003:80"
+    depends_on:
+      - product-db
+    networks:
+      - eshop-network
+    restart: on-failure
+
+  # Aggregator API Gateway
+  aggregator:
+    build:
+      context: .
+      dockerfile: Aggregator.WebApi/Dockerfile
+    container_name: aggregator
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - MicroserviceUrls__CustomerService=http://customer-service
+      - MicroserviceUrls__OrderService=http://order-service
+      - MicroserviceUrls__ProductService=http://product-service
+    ports:
+      - "5000:80"
+    depends_on:
+      - customer-service
+      - order-service
+      - product-service
+    networks:
+      - eshop-network
+    restart: on-failure
+
+networks:
+  eshop-network:
+    driver: bridge
+
+volumes:
+  customer-db-data:
+  order-db-data:
+  product-db-data:
+
